@@ -4,7 +4,11 @@ Instaladores **oficiales y sin modificar** de **Python 3.13.17** y **LibreOffice
 
 ## Descarga
 
-En [Releases](../../releases/latest) está el archivo `Instaladores_Python3.13.17_LibreOffice25.8.7.zip` (≈1,1 GB) y `SHA256SUMS.txt`.
+En [Releases](../../releases/latest):
+
+- **Todo (Windows y Mac):** [Instaladores_Python3.13.17_LibreOffice25.8.7.zip](https://github.com/ccaniullanav/programas-pc/releases/download/python3.13.17-libreoffice25.8.7/Instaladores_Python3.13.17_LibreOffice25.8.7.zip) (≈1,1 GB)
+- **Solo Windows:** [Instaladores_Windows_Python3.13.17_LibreOffice25.8.7.zip](https://github.com/ccaniullanav/programas-pc/releases/download/python3.13.17-libreoffice25.8.7/Instaladores_Windows_Python3.13.17_LibreOffice25.8.7.zip) (≈400 MB)
+- [SHA256SUMS.txt](https://github.com/ccaniullanav/programas-pc/releases/download/python3.13.17-libreoffice25.8.7/SHA256SUMS.txt)
 
 | Carpeta del zip | Contenido |
 |---|---|

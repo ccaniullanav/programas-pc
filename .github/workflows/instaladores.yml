@@ -40,7 +40,7 @@ jobs:
           gh release delete "$ETQ" --yes --cleanup-tag 2>/dev/null || true
           gh release create "$ETQ" --target "$GITHUB_SHA" \
             --title "Python ${{ steps.d.outputs.py }} y LibreOffice ${{ steps.d.outputs.lo }} (instaladores oficiales)" \
-            --notes-file - "${{ steps.d.outputs.zip }}" "${{ steps.d.outputs.sumas }}" <<NOTAS
+            --notes-file - "${{ steps.d.outputs.zip }}" "${{ steps.d.outputs.zipwin }}" "${{ steps.d.outputs.sumas }}" <<NOTAS
           Instaladores oficiales **sin modificar**, descargados de python.org y documentfoundation.org.
           Cada archivo coincide con la huella SHA-256 publicada por su fuente oficial (ver SHA256SUMS.txt).
 
@@ -49,4 +49,6 @@ jobs:
           | Windows/ | Python ${{ steps.d.outputs.py }} 64 bits (.exe) y LibreOffice ${{ steps.d.outputs.lo }} x86-64 (.msi) |
           | Mac/Silicon/ | Python ${{ steps.d.outputs.py }} universal2 (.pkg) y LibreOffice ${{ steps.d.outputs.lo }} para chip Apple (.dmg) |
           | Mac/Intel/ | Python ${{ steps.d.outputs.py }} universal2 (.pkg) y LibreOffice ${{ steps.d.outputs.lo }} para Intel (.dmg) |
+
+          Solo Windows: Instaladores_Windows_Python${{ steps.d.outputs.py }}_LibreOffice${{ steps.d.outputs.lo }}.zip
           NOTAS

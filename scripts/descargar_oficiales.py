@@ -97,9 +97,17 @@ Mac/Intel/    Mac con procesador Intel.
             z.write(locales[url], f'Instaladores/{carpeta}/{url.rsplit("/", 1)[1]}')
         z.writestr('Instaladores/SHA256SUMS.txt', '\n'.join(sumas) + '\n')
         z.writestr('Instaladores/LEEME.txt', leeme)
+    # zip aparte sólo con Windows
+    zw = os.path.join(a.salida, f'Instaladores_Windows_Python{py}_LibreOffice{lo}.zip')
+    with zipfile.ZipFile(zw, 'w', zipfile.ZIP_STORED, allowZip64=True) as z:
+        for carpeta, (url, _) in plan:
+            if carpeta == 'Windows': z.write(locales[url], f'Instaladores_Windows/{url.rsplit("/", 1)[1]}')
+        z.writestr('Instaladores_Windows/SHA256SUMS.txt', '\n'.join(x.replace('Windows/', '') for x in sumas if '  Windows/' in x) + '\n')
+        z.writestr('Instaladores_Windows/LEEME.txt', leeme)
+    print(f'Listo: {zw} ({os.path.getsize(zw) / 1e6:.0f} MB)')
     open(os.path.join(a.salida, 'SHA256SUMS.txt'), 'w').write('\n'.join(sumas) + '\n')
     print(f'Listo: {zp} ({os.path.getsize(zp) / 1e6:.0f} MB)')
-    with open(os.environ.get('GITHUB_OUTPUT', os.devnull), 'a') as f: f.write(f'zip={zp}\nsumas={os.path.join(a.salida, "SHA256SUMS.txt")}\npy={py}\nlo={lo}\n')
+    with open(os.environ.get('GITHUB_OUTPUT', os.devnull), 'a') as f: f.write(f'zip={zp}\nzipwin={zw}\nsumas={os.path.join(a.salida, "SHA256SUMS.txt")}\npy={py}\nlo={lo}\n')
 
 if __name__ == '__main__':
     main()

@@ -1,0 +1,52 @@
+# Descarga los instaladores oficiales de Python y LibreOffice, verifica su huella sha256 publicada por cada fuente
+# y los publica como Release (Windows / Mac/Silicon / Mac/Intel) con el archivo de huellas.
+name: Instaladores oficiales
+
+on:
+  workflow_dispatch:
+    inputs:
+      python:
+        description: 'Versión exacta de Python'
+        default: '3.13.17'
+        required: true
+      libreoffice:
+        description: 'Versión exacta de LibreOffice'
+        default: '25.8.7'
+        required: true
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/**'
+      - '.github/workflows/instaladores.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  descargar:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - id: d
+        run: python scripts/descargar_oficiales.py --python "${{ inputs.python || '3.13.17' }}" --libreoffice "${{ inputs.libreoffice || '25.8.7' }}"
+      - name: Publicar en Releases
+        run: |
+          ETQ="python${{ steps.d.outputs.py }}-libreoffice${{ steps.d.outputs.lo }}"
+          gh release delete "$ETQ" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$ETQ" --target "$GITHUB_SHA" \
+            --title "Python ${{ steps.d.outputs.py }} y LibreOffice ${{ steps.d.outputs.lo }} (instaladores oficiales)" \
+            --notes-file - "${{ steps.d.outputs.zip }}" "${{ steps.d.outputs.sumas }}" <<NOTAS
+          Instaladores oficiales **sin modificar**, descargados de python.org y documentfoundation.org.
+          Cada archivo coincide con la huella SHA-256 publicada por su fuente oficial (ver SHA256SUMS.txt).
+
+          | Carpeta del zip | Contenido |
+          |---|---|
+          | Windows/ | Python ${{ steps.d.outputs.py }} 64 bits (.exe) y LibreOffice ${{ steps.d.outputs.lo }} x86-64 (.msi) |
+          | Mac/Silicon/ | Python ${{ steps.d.outputs.py }} universal2 (.pkg) y LibreOffice ${{ steps.d.outputs.lo }} para chip Apple (.dmg) |
+          | Mac/Intel/ | Python ${{ steps.d.outputs.py }} universal2 (.pkg) y LibreOffice ${{ steps.d.outputs.lo }} para Intel (.dmg) |
+          NOTAS
